@@ -880,6 +880,8 @@ const zhHant = {
     engineSettings: '引擎設定',
     engineSettingsDescription: '所選知識引擎的設定',
     engineSettingsReadonly: '編輯模式下不可修改',
+    engineSettingsInvalid: '引擎設定中存在無效項，請檢查必填欄位',
+    retrievalSettingsInvalid: '檢索設定中存在無效項，請檢查必填欄位',
     retrievalSettings: '檢索設定',
     retrievalSettingsDescription: '設定從此知識庫檢索文件的方式',
     dangerZone: '危險區域',

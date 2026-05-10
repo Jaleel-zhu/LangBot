@@ -924,6 +924,10 @@
     engineSettings: 'エンジン設定',
     engineSettingsDescription: '選択したナレッジエンジンの設定',
     engineSettingsReadonly: '編集モードでは変更できません',
+    engineSettingsInvalid:
+      'エンジン設定の検証に失敗しました、必須項目を確認してください',
+    retrievalSettingsInvalid:
+      '検索設定の検証に失敗しました、必須項目を確認してください',
     retrievalSettings: '検索設定',
     retrievalSettingsDescription: 'このナレッジベースからの文書検索方法を設定',
     dangerZone: '危険ゾーン',

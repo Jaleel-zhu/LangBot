@@ -936,6 +936,10 @@ const ruRU = {
     engineSettings: 'Настройки движка',
     engineSettingsDescription: 'Конфигурация выбранного движка знаний',
     engineSettingsReadonly: 'только чтение в режиме редактирования',
+    engineSettingsInvalid:
+      'Настройки движка недействительны, проверьте обязательные поля',
+    retrievalSettingsInvalid:
+      'Настройки извлечения недействительны, проверьте обязательные поля',
     retrievalSettings: 'Настройки извлечения',
     retrievalSettingsDescription:
       'Настройте способ извлечения документов из базы знаний',

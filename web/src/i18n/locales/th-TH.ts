@@ -915,6 +915,10 @@ const thTH = {
     engineSettings: 'การตั้งค่าเครื่องมือ',
     engineSettingsDescription: 'การกำหนดค่าสำหรับเครื่องมือความรู้ที่เลือก',
     engineSettingsReadonly: 'อ่านอย่างเดียวในโหมดแก้ไข',
+    engineSettingsInvalid:
+      'การตั้งค่าเครื่องมือไม่ถูกต้อง โปรดตรวจสอบฟิลด์ที่จำเป็น',
+    retrievalSettingsInvalid:
+      'การตั้งค่าการดึงข้อมูลไม่ถูกต้อง โปรดตรวจสอบฟิลด์ที่จำเป็น',
     retrievalSettings: 'การตั้งค่าการดึงข้อมูล',
     retrievalSettingsDescription: 'กำหนดค่าวิธีดึงเอกสารจากฐานความรู้นี้',
     dangerZone: 'โซนอันตราย',
