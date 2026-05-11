@@ -44,6 +44,8 @@ const thTH = {
     success: 'สำเร็จ',
     save: 'บันทึก',
     saving: 'กำลังบันทึก...',
+    recommend: 'แนะนำ',
+    start: 'เริ่ม',
     confirm: 'ยืนยัน',
     confirmDelete: 'ยืนยันการลบ',
     deleteConfirmation: 'คุณแน่ใจหรือไม่ว่าต้องการลบสิ่งนี้?',
@@ -1357,8 +1359,7 @@ const thTH = {
     createFailed: 'สร้างบอตไม่สำเร็จ',
     connecting: 'กำลังเชื่อมต่อบริการ WeCom...',
     retry: 'ลองใหม่',
-    robotNameNote:
-      'ไม่สามารถดึงชื่อบอตได้โดยอัตโนมัติ กรุณากรอกด้วยตนเอง',
+    robotNameNote: 'ไม่สามารถดึงชื่อบอตได้โดยอัตโนมัติ กรุณากรอกด้วยตนเอง',
   },
   pluginPages: {
     selectFromSidebar: 'เลือกหน้าปลั๊กอินจากแถบด้านข้าง',

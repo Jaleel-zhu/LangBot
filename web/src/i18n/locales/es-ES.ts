@@ -47,6 +47,8 @@ const esES = {
     success: 'Éxito',
     save: 'Guardar',
     saving: 'Guardando...',
+    recommend: 'Recomendado',
+    start: 'Iniciar',
     confirm: 'Confirmar',
     confirmDelete: 'Confirmar eliminación',
     deleteConfirmation: '¿Estás seguro de que deseas eliminar esto?',

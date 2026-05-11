@@ -45,6 +45,8 @@ const viVN = {
     success: 'Thành công',
     save: 'Lưu',
     saving: 'Đang lưu...',
+    recommend: 'Đề xuất',
+    start: 'Bắt đầu',
     confirm: 'Xác nhận',
     confirmDelete: 'Xác nhận xóa',
     deleteConfirmation: 'Bạn có chắc chắn muốn xóa mục này không?',
@@ -1342,7 +1344,8 @@ const viVN = {
     scanQRCode:
       'Quét mã QR bên dưới bằng Feishu để ủy quyền và tự động tạo ứng dụng',
     waitingForScan: 'Đang chờ quét',
-    createSuccess: 'Tạo ứng dụng thành công! Thông tin xác thực đã được điền tự động',
+    createSuccess:
+      'Tạo ứng dụng thành công! Thông tin xác thực đã được điền tự động',
     createFailed: 'Tạo ứng dụng thất bại',
     connecting: 'Đang kết nối tới dịch vụ Feishu...',
     expired: 'Mã QR đã hết hạn, vui lòng thử lại',
@@ -1363,7 +1366,8 @@ const viVN = {
     scanQRCode:
       'Quét mã QR bên dưới bằng DingTalk để ủy quyền và tự động tạo ứng dụng',
     waitingForScan: 'Đang chờ quét',
-    createSuccess: 'Tạo ứng dụng thành công! Thông tin xác thực đã được điền tự động',
+    createSuccess:
+      'Tạo ứng dụng thành công! Thông tin xác thực đã được điền tự động',
     createFailed: 'Tạo ứng dụng thất bại',
     connecting: 'Đang kết nối tới dịch vụ DingTalk...',
     retry: 'Thử lại',
@@ -1372,15 +1376,14 @@ const viVN = {
   },
   wecombot: {
     createBot: 'Tạo bot WeCom chỉ với một lần nhấp',
-    scanQRCode:
-      'Quét mã QR bên dưới bằng WeCom để ủy quyền và tự động tạo bot',
+    scanQRCode: 'Quét mã QR bên dưới bằng WeCom để ủy quyền và tự động tạo bot',
     waitingForScan: 'Đang chờ quét',
-    createSuccess: 'Tạo bot thành công! Thông tin xác thực đã được điền tự động',
+    createSuccess:
+      'Tạo bot thành công! Thông tin xác thực đã được điền tự động',
     createFailed: 'Tạo bot thất bại',
     connecting: 'Đang kết nối tới dịch vụ WeCom...',
     retry: 'Thử lại',
-    robotNameNote:
-      'Không thể tự động lấy tên bot. Vui lòng điền thủ công.',
+    robotNameNote: 'Không thể tự động lấy tên bot. Vui lòng điền thủ công.',
   },
   pluginPages: {
     selectFromSidebar: 'Chọn một trang plugin từ thanh bên',
