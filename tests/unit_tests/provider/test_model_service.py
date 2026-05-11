@@ -11,10 +11,12 @@ import langbot_plugin.api.entities.builtin.platform.message as platform_message
 import langbot_plugin.api.entities.builtin.provider.session as provider_session
 
 from langbot.pkg.api.http.service.model import _runtime_model_data
+from langbot.pkg.api.http.service.provider import ModelProviderService
 from langbot.pkg.entity.persistence import model as persistence_model
 from langbot.pkg.pipeline.preproc.preproc import PreProcessor
 from langbot.pkg.provider.modelmgr import requester
 from langbot.pkg.provider.modelmgr.modelmgr import ModelManager
+from langbot.pkg.provider.modelmgr.requesters.chatcmpl import OpenAIChatCompletions
 from langbot.pkg.provider.runners.localagent import LocalAgentRunner
 
 
@@ -56,6 +58,31 @@ def test_runtime_rerank_model_data_preserves_uuid_after_update_payload_uuid_remo
 
     assert runtime_entity.uuid == 'rerank-uuid'
     assert runtime_entity.name == 'rerank-model'
+
+
+def test_normalize_space_provider_api_keys_filters_blank_values():
+    assert ModelProviderService._normalize_api_keys('space-key') == ['space-key']
+    assert ModelProviderService._normalize_api_keys('  trimmed-key  ') == ['trimmed-key']
+    assert ModelProviderService._normalize_api_keys('') == []
+    assert ModelProviderService._normalize_api_keys('   ') == []
+    assert ModelProviderService._normalize_api_keys(None) == []
+
+
+@pytest.mark.asyncio
+async def test_openai_requester_initialize_uses_placeholder_api_key(monkeypatch):
+    captured_kwargs = {}
+
+    def fake_client(**kwargs):
+        captured_kwargs.update(kwargs)
+        return SimpleNamespace(**kwargs)
+
+    monkeypatch.setattr('langbot.pkg.provider.modelmgr.requesters.chatcmpl.openai.AsyncClient', fake_client)
+    monkeypatch.setattr('langbot.pkg.provider.modelmgr.requesters.chatcmpl.httpx.AsyncClient', fake_client)
+
+    requester_inst = OpenAIChatCompletions(ap=SimpleNamespace(), config={})
+    await requester_inst.initialize()
+
+    assert captured_kwargs['api_key'] == OpenAIChatCompletions.init_api_key
 
 
 @pytest.mark.asyncio

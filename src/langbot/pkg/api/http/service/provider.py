@@ -17,6 +17,11 @@ class ModelProviderService:
     def __init__(self, ap: app.Application) -> None:
         self.ap = ap
 
+    @staticmethod
+    def _normalize_api_keys(api_key: str | None) -> list[str]:
+        normalized_api_key = api_key.strip() if api_key else ''
+        return [normalized_api_key] if normalized_api_key else []
+
     async def get_providers(self) -> list[dict]:
         """Get all providers"""
         result = await self.ap.persistence_mgr.execute_async(sqlalchemy.select(persistence_model.ModelProvider))
@@ -177,7 +182,7 @@ class ModelProviderService:
         await self.ap.persistence_mgr.execute_async(
             sqlalchemy.update(persistence_model.ModelProvider)
             .where(persistence_model.ModelProvider.uuid == '00000000-0000-0000-0000-000000000000')
-            .values(api_keys=[api_key])
+            .values(api_keys=self._normalize_api_keys(api_key))
         )
         await self.ap.model_mgr.reload_provider('00000000-0000-0000-0000-000000000000')
 

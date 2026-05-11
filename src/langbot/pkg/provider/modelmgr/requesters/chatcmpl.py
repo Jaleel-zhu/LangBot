@@ -17,6 +17,7 @@ class OpenAIChatCompletions(requester.ProviderAPIRequester):
     """OpenAI ChatCompletion API 请求器"""
 
     client: openai.AsyncClient
+    init_api_key: str = 'langbot-init-placeholder'
 
     default_config: dict[str, typing.Any] = {
         'base_url': 'https://api.openai.com/v1',
@@ -25,7 +26,7 @@ class OpenAIChatCompletions(requester.ProviderAPIRequester):
 
     async def initialize(self):
         self.client = openai.AsyncClient(
-            api_key='',
+            api_key=self.init_api_key,
             base_url=self.requester_cfg['base_url'].replace(' ', ''),
             timeout=self.requester_cfg['timeout'],
             http_client=httpx.AsyncClient(trust_env=True, timeout=self.requester_cfg['timeout']),
