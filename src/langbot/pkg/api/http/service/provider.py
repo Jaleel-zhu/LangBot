@@ -18,9 +18,22 @@ class ModelProviderService:
         self.ap = ap
 
     @staticmethod
-    def _normalize_api_keys(api_key: str | None) -> list[str]:
-        normalized_api_key = api_key.strip() if api_key else ''
-        return [normalized_api_key] if normalized_api_key else []
+    def _normalize_api_keys(api_keys: str | list[str] | tuple[str, ...] | None) -> list[str]:
+        if api_keys is None:
+            return []
+
+        raw_keys = [api_keys] if isinstance(api_keys, str) else list(api_keys)
+        normalized_keys = []
+        seen_keys = set()
+
+        for raw_key in raw_keys:
+            normalized_key = raw_key.strip() if isinstance(raw_key, str) else ''
+            if not normalized_key or normalized_key in seen_keys:
+                continue
+            normalized_keys.append(normalized_key)
+            seen_keys.add(normalized_key)
+
+        return normalized_keys
 
     async def get_providers(self) -> list[dict]:
         """Get all providers"""
@@ -64,6 +77,7 @@ class ModelProviderService:
     async def create_provider(self, provider_data: dict) -> str:
         """Create a new provider"""
         provider_data['uuid'] = str(uuid.uuid4())
+        provider_data['api_keys'] = self._normalize_api_keys(provider_data.get('api_keys'))
         await self.ap.persistence_mgr.execute_async(
             sqlalchemy.insert(persistence_model.ModelProvider).values(**provider_data)
         )
@@ -77,6 +91,8 @@ class ModelProviderService:
         """Update an existing provider"""
         if 'uuid' in provider_data:
             del provider_data['uuid']
+        if 'api_keys' in provider_data:
+            provider_data['api_keys'] = self._normalize_api_keys(provider_data.get('api_keys'))
         await self.ap.persistence_mgr.execute_async(
             sqlalchemy.update(persistence_model.ModelProvider)
             .where(persistence_model.ModelProvider.uuid == provider_uuid)
@@ -146,6 +162,8 @@ class ModelProviderService:
 
     async def find_or_create_provider(self, requester: str, base_url: str, api_keys: list) -> str:
         """Find existing provider or create new one"""
+        api_keys = self._normalize_api_keys(api_keys)
+
         # Try to find existing provider with same config
         result = await self.ap.persistence_mgr.execute_async(
             sqlalchemy.select(persistence_model.ModelProvider).where(
@@ -173,7 +191,7 @@ class ModelProviderService:
                 'name': provider_name,
                 'requester': requester,
                 'base_url': base_url,
-                'api_keys': api_keys or [],
+                'api_keys': api_keys,
             }
         )
 

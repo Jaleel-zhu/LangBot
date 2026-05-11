@@ -17,7 +17,6 @@ class OpenAIChatCompletions(requester.ProviderAPIRequester):
     """OpenAI ChatCompletion API 请求器"""
 
     client: openai.AsyncClient
-    init_api_key: str = 'langbot-init-placeholder'
 
     default_config: dict[str, typing.Any] = {
         'base_url': 'https://api.openai.com/v1',
