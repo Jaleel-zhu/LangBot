@@ -39,6 +39,16 @@ def _normalize_plugin_asset_path(filepath: str) -> str | None:
     return f'assets/{normalized}'
 
 
+def _get_request_origin() -> str:
+    """Return the public request origin, respecting reverse-proxy headers."""
+    forwarded_proto = quart.request.headers.get('X-Forwarded-Proto', '').split(',')[0].strip()
+    forwarded_host = quart.request.headers.get('X-Forwarded-Host', '').split(',')[0].strip()
+
+    scheme = forwarded_proto or quart.request.scheme
+    host = forwarded_host or quart.request.host
+    return f'{scheme}://{host}'
+
+
 @group.group_class('plugins', '/api/v1/plugins')
 class PluginsRouterGroup(group.RouterGroup):
     async def _check_extensions_limit(self) -> str | None:
@@ -189,7 +199,7 @@ class PluginsRouterGroup(group.RouterGroup):
             # CSP for HTML pages served to sandboxed iframes (opaque origin).
             # 'self' doesn't work in sandboxed iframes — use actual server origin.
             if mime_type and mime_type.startswith('text/html'):
-                origin = f'{quart.request.scheme}://{quart.request.host}'
+                origin = _get_request_origin()
                 resp.headers['Content-Security-Policy'] = (
                     f'default-src {origin}; '
                     f"script-src {origin} 'unsafe-inline'; "
