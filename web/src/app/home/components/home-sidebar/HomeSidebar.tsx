@@ -338,7 +338,9 @@ function NavItems({
                 tooltip={config.name}
               >
                 {config.icon}
-                <span className="cursor-pointer select-none">{config.name}</span>
+                <span className="cursor-pointer select-none">
+                  {config.name}
+                </span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           );
@@ -728,7 +730,9 @@ function NavItems({
                   }}
                 >
                   {config.icon}
-                  <span className="cursor-pointer select-none">{config.name}</span>
+                  <span className="cursor-pointer select-none">
+                    {config.name}
+                  </span>
                   <div className="ml-auto flex items-center gap-0.5 -mr-1">
                     {canCreate &&
                       (isPlugin ? (
@@ -1144,7 +1148,9 @@ function PluginPagesNav() {
                                 onClick={() => navigate(route)}
                                 className="select-none"
                               >
-                                <span className="cursor-pointer">{page.name}</span>
+                                <span className="cursor-pointer">
+                                  {page.name}
+                                </span>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           );
