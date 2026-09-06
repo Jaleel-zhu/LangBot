@@ -1,4 +1,9 @@
 import { BaseHttpClient, type RequestConfig } from './BaseHttpClient';
+import type {
+  CodexAuthStatus,
+  CodexDeviceAuthorization,
+  CodexDevicePoll,
+} from '@/app/infra/entities/codex';
 import {
   ApiRespProviderRequesters,
   ApiRespProviderRequester,
@@ -126,8 +131,52 @@ export class BackendClient extends BaseHttpClient {
     return this.put(`/api/v1/provider/providers/${uuid}`, provider);
   }
 
-  public deleteModelProvider(uuid: string): Promise<object> {
-    return this.delete(`/api/v1/provider/providers/${uuid}`);
+  public deleteModelProvider(uuid: string, cascade = false): Promise<object> {
+    return this.delete(
+      `/api/v1/provider/providers/${uuid}${cascade ? '?cascade=true' : ''}`,
+    );
+  }
+
+  public getCodexAuthStatus(
+    uuid: string,
+    signal?: AbortSignal,
+  ): Promise<CodexAuthStatus> {
+    return this.get(
+      `/api/v1/provider/providers/${uuid}/codex/status`,
+      undefined,
+      { signal },
+    );
+  }
+
+  public startCodexDeviceLogin(
+    uuid: string,
+  ): Promise<CodexDeviceAuthorization> {
+    return this.post(`/api/v1/provider/providers/${uuid}/codex/device`, {});
+  }
+
+  public pollCodexDeviceLogin(
+    uuid: string,
+    authorizationId: string,
+    signal?: AbortSignal,
+  ): Promise<CodexDevicePoll> {
+    return this.post(
+      `/api/v1/provider/providers/${uuid}/codex/device/poll`,
+      { authorization_id: authorizationId },
+      { signal },
+    );
+  }
+
+  public cancelCodexDeviceLogin(
+    uuid: string,
+    authorizationId: string,
+  ): Promise<object> {
+    return this.delete(
+      `/api/v1/provider/providers/${uuid}/codex/device/${encodeURIComponent(authorizationId)}`,
+    );
+  }
+
+  public disconnectCodex(uuid: string): Promise<object> {
+    return this.delete(`/api/v1/provider/providers/${uuid}/codex/auth`);
   }
 
   public scanProviderModels(

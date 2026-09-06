@@ -8,6 +8,80 @@ from ... import group
 @group.group_class('models/providers', '/api/v1/provider/providers')
 class ModelProvidersRouterGroup(group.RouterGroup):
     async def initialize(self) -> None:
+        # Subscription authorization is an interactive, browser-user-only surface.
+        @self.route(
+            '/<provider_uuid>/codex/status',
+            methods=['GET'],
+            auth_type=group.AuthType.USER_TOKEN,
+            permission=Permission.PROVIDER_SECRET_MANAGE,
+        )
+        async def codex_status(provider_uuid: str, request_context: RequestContext):
+            try:
+                return self.success(
+                    data=await self.ap.provider_service.codex_auth.status(request_context, provider_uuid)
+                )
+            except ValueError as exc:
+                return self.http_status(400, -1, str(exc))
+
+        @self.route(
+            '/<provider_uuid>/codex/device',
+            methods=['POST'],
+            auth_type=group.AuthType.USER_TOKEN,
+            permission=Permission.PROVIDER_SECRET_MANAGE,
+        )
+        async def codex_device(provider_uuid: str, request_context: RequestContext):
+            try:
+                return self.success(
+                    data=await self.ap.provider_service.codex_auth.start(request_context, provider_uuid)
+                )
+            except ValueError as exc:
+                return self.http_status(400, -1, str(exc))
+
+        @self.route(
+            '/<provider_uuid>/codex/device/poll',
+            methods=['POST'],
+            auth_type=group.AuthType.USER_TOKEN,
+            permission=Permission.PROVIDER_SECRET_MANAGE,
+        )
+        async def codex_poll(provider_uuid: str, request_context: RequestContext):
+            body = await quart.request.get_json()
+            if not isinstance(body, dict):
+                return self.http_status(400, -1, 'JSON object required')
+            try:
+                return self.success(
+                    data=await self.ap.provider_service.codex_auth.poll(
+                        request_context, provider_uuid, body.get('authorization_id')
+                    )
+                )
+            except ValueError as exc:
+                return self.http_status(400, -1, str(exc))
+
+        @self.route(
+            '/<provider_uuid>/codex/auth',
+            methods=['DELETE'],
+            auth_type=group.AuthType.USER_TOKEN,
+            permission=Permission.PROVIDER_SECRET_MANAGE,
+        )
+        async def codex_disconnect(provider_uuid: str, request_context: RequestContext):
+            try:
+                await self.ap.provider_service.codex_auth.disconnect(request_context, provider_uuid)
+                return self.success()
+            except ValueError as exc:
+                return self.http_status(400, -1, str(exc))
+
+        @self.route(
+            '/<provider_uuid>/codex/device/<authorization_id>',
+            methods=['DELETE'],
+            auth_type=group.AuthType.USER_TOKEN,
+            permission=Permission.PROVIDER_SECRET_MANAGE,
+        )
+        async def codex_cancel(provider_uuid: str, authorization_id: str, request_context: RequestContext):
+            try:
+                await self.ap.provider_service.codex_auth.cancel(request_context, provider_uuid, authorization_id)
+                return self.success()
+            except ValueError as exc:
+                return self.http_status(400, -1, str(exc))
+
         @self.route(
             '',
             methods=['GET'],
@@ -82,7 +156,15 @@ class ModelProvidersRouterGroup(group.RouterGroup):
         )
         async def _(provider_uuid: str, request_context: RequestContext) -> str:
             try:
-                await self.ap.provider_service.delete_provider(request_context, provider_uuid)
+                cascade_values = quart.request.args.getlist('cascade')
+                if cascade_values:
+                    if len(cascade_values) != 1 or cascade_values[0] not in ('true', 'false'):
+                        return self.http_status(400, -1, 'cascade must be a single true or false value')
+                    await self.ap.provider_service.delete_provider(
+                        request_context, provider_uuid, cascade=cascade_values[0] == 'true'
+                    )
+                else:
+                    await self.ap.provider_service.delete_provider(request_context, provider_uuid)
                 return self.success()
             except ValueError as e:
                 return self.http_status(400, -1, str(e))
